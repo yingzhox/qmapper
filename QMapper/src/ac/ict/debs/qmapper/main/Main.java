@@ -25,7 +25,7 @@ public class Main {
 				.get(0);
 		if (tCustomSqlStatement.sqlstatementtype == ESqlStatementType.sstselect) {
 			TSelectSqlStatement select = (TSelectSqlStatement) tCustomSqlStatement;
-			select.t
+			//select.t
 		}
 
 	}
