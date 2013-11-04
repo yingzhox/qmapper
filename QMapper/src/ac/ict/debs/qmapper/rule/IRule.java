@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import org.apache.log4j.Logger;
 
+import ac.ict.debs.qmapper.exception.TableNotFoundException;
 import ac.ict.debs.qmapper.util.ColumnResolver;
 import ac.ict.debs.qmapper.util.ColumnResolver.Column;
 import gudusoft.gsqlparser.EDbVendor;
@@ -32,14 +33,16 @@ public abstract class IRule {
 
 	protected IRule nextRule;
 	protected TCustomSqlStatement origin;
+	protected ColumnResolver resolver;
 	final protected static Logger LOG = Logger.getLogger(IRule.class);
 
-	public IRule(TCustomSqlStatement origin) {
+	public IRule(TCustomSqlStatement origin, ColumnResolver resolver) {
 		this.origin = origin;
+		this.resolver = resolver;
 	}
 
 	public abstract TSelectSqlStatement apply(TCustomSqlStatement origin,
-			TSelectSqlStatement dest);
+			TSelectSqlStatement dest) throws TableNotFoundException;
 
 	protected void error(String message) {
 		LOG.error("Error:" + message + " Rule Class:"
@@ -156,9 +159,9 @@ public abstract class IRule {
 		return "NOT_IDENTIFIED";
 	}
 
-	protected TSelectSqlStatement genSelectList(TTable targetTable) {
-		ArrayList<Column> table = ColumnResolver
-				.getTable(targetTable.getName());
+	protected TSelectSqlStatement genSelectList(TTable targetTable)
+			throws TableNotFoundException {
+		ArrayList<Column> table = this.resolver.getTable(targetTable.getName());
 		// dest.setNodeType(TSelectSqlStatement.)
 		// System.out.println(targetTable.getAliasClause());
 		String alias = targetTable.getAliasClause() == null ? null
@@ -206,8 +209,9 @@ public abstract class IRule {
 		// result.removeElementAt(arg0)
 	}
 
-	protected boolean isColumnNameMatchTable(TExpression one, TTable target) {
-		ArrayList<Column> table = ColumnResolver.getTable(target.getFullName());
+	protected boolean isColumnNameMatchTable(TExpression one, TTable target)
+			throws TableNotFoundException {
+		ArrayList<Column> table = this.resolver.getTable(target.getFullName());
 		for (Column col : table) {
 			if (one.getObjectOperand().getColumnNameOnly().toLowerCase()
 					.equals(col.columnName.toLowerCase()))

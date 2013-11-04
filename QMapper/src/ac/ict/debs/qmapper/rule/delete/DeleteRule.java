@@ -16,18 +16,20 @@ import gudusoft.gsqlparser.nodes.TTable;
 import gudusoft.gsqlparser.nodes.TWhereClause;
 import gudusoft.gsqlparser.stmt.TDeleteSqlStatement;
 import gudusoft.gsqlparser.stmt.TSelectSqlStatement;
+import ac.ict.debs.qmapper.exception.TableNotFoundException;
 import ac.ict.debs.qmapper.rule.IRule;
 import ac.ict.debs.qmapper.rule.JoinConditionVisitor;
+import ac.ict.debs.qmapper.util.ColumnResolver;
 
 public class DeleteRule extends IRule {
 
-	public DeleteRule(TCustomSqlStatement origin) {
-		super(origin);
+	public DeleteRule(TCustomSqlStatement origin, ColumnResolver resolver) {
+		super(origin, resolver);
 	}
 
 	@Override
 	public TSelectSqlStatement apply(TCustomSqlStatement origin,
-			TSelectSqlStatement dest) {
+			TSelectSqlStatement dest) throws TableNotFoundException {
 		TDeleteSqlStatement del = (TDeleteSqlStatement) origin;
 		dest = this.genSelectList(del.getTargetTable());
 		if (origin.getWhereClause() != null) {
@@ -57,7 +59,7 @@ public class DeleteRule extends IRule {
 	}
 
 	private void extractExistsSubQueryToJOIN(TWhereClause where,
-			TSelectSqlStatement dest) {
+			TSelectSqlStatement dest) throws TableNotFoundException {
 		TExpression condition = where.getCondition();
 		LinkedList<TExpression> queue = new LinkedList<TExpression>();
 		queue.add(condition);
@@ -153,7 +155,7 @@ public class DeleteRule extends IRule {
 	final protected static Logger LOG = Logger.getLogger(DeleteRule.class);
 
 	private JoinTableAndCondition modifyExistsToJoin(TExpression exists,
-			TJoin master) {
+			TJoin master) throws TableNotFoundException {
 		JoinTableAndCondition res = new JoinTableAndCondition();
 		res.alias = "outer_" + counter++;
 		res.isSubQuery = true;

@@ -14,21 +14,22 @@ import gudusoft.gsqlparser.nodes.TWhereClause;
 import gudusoft.gsqlparser.stmt.TInsertSqlStatement;
 import gudusoft.gsqlparser.stmt.TSelectSqlStatement;
 import gudusoft.gsqlparser.stmt.TUpdateSqlStatement;
+import ac.ict.debs.qmapper.exception.TableNotFoundException;
 import ac.ict.debs.qmapper.rule.IRule;
 import ac.ict.debs.qmapper.util.ColumnResolver;
 import ac.ict.debs.qmapper.util.ColumnResolver.Column;
 
 public class UpdateRule extends IRule {
 
-	public UpdateRule(TCustomSqlStatement origin) {
-		super(origin);
+	public UpdateRule(TCustomSqlStatement origin, ColumnResolver resolver) {
+		super(origin, resolver);
 	}
 
 	// dest 是生成的
 	// origin 是一个TUpdateSqlStatement
 	@Override
 	public TSelectSqlStatement apply(TCustomSqlStatement origin,
-			TSelectSqlStatement dest) {
+			TSelectSqlStatement dest) throws TableNotFoundException {
 		TUpdateSqlStatement update = (TUpdateSqlStatement) origin;
 
 		// 先把update的目标表给dest
@@ -104,7 +105,5 @@ public class UpdateRule extends IRule {
 					+ dest.getExpr().getObjectOperand().getColumnNameOnly());
 		}
 	}
-
-	
 
 }

@@ -6,25 +6,26 @@ import gudusoft.gsqlparser.TCustomSqlStatement;
 import gudusoft.gsqlparser.nodes.TObjectName;
 import gudusoft.gsqlparser.stmt.TInsertSqlStatement;
 import gudusoft.gsqlparser.stmt.TSelectSqlStatement;
+import ac.ict.debs.qmapper.exception.TableNotFoundException;
 import ac.ict.debs.qmapper.rule.IRule;
 import ac.ict.debs.qmapper.util.ColumnResolver;
 import ac.ict.debs.qmapper.util.ColumnResolver.Column;
 
 public class InsertRule extends IRule {
 
-	public InsertRule(TCustomSqlStatement origin) {
-		super(origin);
+	public InsertRule(TCustomSqlStatement origin, ColumnResolver resolver) {
+		super(origin, resolver);
 	}
 
 	@Override
 	public TSelectSqlStatement apply(TCustomSqlStatement origin,
-			TSelectSqlStatement dest) {
+			TSelectSqlStatement dest) throws TableNotFoundException {
 		TInsertSqlStatement insert = (TInsertSqlStatement) origin;
 		// 可以直接复制select部分
 		dest = (TSelectSqlStatement) this.parser(insert.getSubQuery()
 				.toString());
 		// 对select部分做添加列
-		ArrayList<Column> table = ColumnResolver.getTable(insert
+		ArrayList<Column> table = this.resolver.getTable(insert
 				.getTargetTable().getFullName());
 
 		if (insert.getColumnList() != null && insert.getColumnList().size() > 0) {
@@ -39,8 +40,8 @@ public class InsertRule extends IRule {
 					TObjectName objectName = insert.getColumnList()
 							.getObjectName(j);
 					// 看看列明是否一样
-//					System.out.println(objectName.getColumnNameOnly()
-//							+ "-compare-" + current.columnName);
+					// System.out.println(objectName.getColumnNameOnly()
+					// + "-compare-" + current.columnName);
 					if (objectName.getColumnNameOnly().toLowerCase().trim()
 							.equals(current.columnName.toLowerCase().trim())) {
 						// 如果一样，则补充已有选择

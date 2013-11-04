@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Mon Nov 04 19:52:52 CST 2013
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=QMapper_fat.jar
+manifest.mergeall=true
+manifest.mainclass=ac.ict.debs.qmapper.server.Service
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=

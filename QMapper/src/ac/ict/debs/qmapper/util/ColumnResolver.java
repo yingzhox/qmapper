@@ -3,6 +3,7 @@ package ac.ict.debs.qmapper.util;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.StringBufferInputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -10,6 +11,8 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
+
+import ac.ict.debs.qmapper.exception.TableNotFoundException;
 
 /**
  * @author Felix
@@ -40,28 +43,44 @@ public class ColumnResolver {
 	 * @throws IOException
 	 * @throws FileNotFoundException
 	 */
-	public static void initialize(String file) throws FileNotFoundException,
-			IOException {
+	public static ColumnResolver initializeWithFile(String file)
+			throws FileNotFoundException, IOException {
+		ColumnResolver rs = new ColumnResolver();
 		Properties prop = new Properties();
 		prop.load(new FileInputStream(file));
 		Set<Entry<Object, Object>> entrySet = prop.entrySet();
 		for (Entry<Object, Object> ent : entrySet) {
-			addDesc(ent.getKey().toString(), ent.getValue().toString());
+			rs.addDesc(ent.getKey().toString(), ent.getValue().toString());
 		}
-		LOG.info("Initialized table num:" + map.size());
+		LOG.info("Initialized table num:" + rs.map.size());
+		return rs;
 	}
 
-	public static ArrayList<Column> getTable(String name) {
+	public static ColumnResolver initializeWithString(String string)
+			throws FileNotFoundException, IOException {
+		ColumnResolver rs = new ColumnResolver();
+		Properties prop = new Properties();
+		prop.load(new StringBufferInputStream(string));
+		Set<Entry<Object, Object>> entrySet = prop.entrySet();
+		for (Entry<Object, Object> ent : entrySet) {
+			rs.addDesc(ent.getKey().toString(), ent.getValue().toString());
+		}
+		LOG.info("Initialized table num:" + rs.map.size());
+		return rs;
+	}
+
+	public ArrayList<Column> getTable(String name)
+			throws TableNotFoundException {
 		if (map.containsKey(name)) {
 			return map.get(name);
 		}
 		LOG.error("Not find table:" + name + " in desc!");
-		return null;
+		throw new TableNotFoundException("Not find table:" + name + " in desc!");
 	}
 
-	private static HashMap<String, ArrayList<Column>> map = new HashMap<String, ArrayList<Column>>();
+	private HashMap<String, ArrayList<Column>> map = new HashMap<String, ArrayList<Column>>();
 
-	public static void addDesc(String tableName, String columns) {
+	public void addDesc(String tableName, String columns) {
 		String[] split2 = columns.split(",");
 		ArrayList<Column> arr = new ArrayList<Column>();
 		map.put(tableName, arr);
