@@ -31,14 +31,15 @@ public class RuleChain {
 	final static Logger LOG = Logger.getLogger(RuleChain.class);
 	EDbVendor vendor = EDbVendor.dbvoracle;
 
-	public String transform(String query) throws TableNotFoundException {
+	public String transform(String query) throws Exception {
 		parser = new TGSqlParser(vendor);
 		parser.sqltext = query;
 		int ErrorNo = parser.parse();
 		if (ErrorNo != 0) {
 			String errorMessage = parser.getErrormessage();
 			LOG.error("SQL format exception:" + errorMessage);
-			System.exit(1);
+			throw new Exception("SQL format exception:" + errorMessage);
+			//System.exit(1);
 		}
 		root = parser.sqlstatements.get(0);
 		this.prepareRule(root);

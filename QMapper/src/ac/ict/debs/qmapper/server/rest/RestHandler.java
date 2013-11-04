@@ -69,6 +69,11 @@ public class RestHandler {
 			e.printStackTrace();
 			rs.setResult(false);
 			rs.setContent(e.getMessage());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			rs.setResult(false);
+			rs.setContent(e.getMessage());
 		}
 		return rs;
 	}

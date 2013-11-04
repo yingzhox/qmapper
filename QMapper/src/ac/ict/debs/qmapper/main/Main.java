@@ -17,12 +17,9 @@ public class Main {
 
 	/**
 	 * @param args
-	 * @throws IOException
-	 * @throws FileNotFoundException
-	 * @throws TableNotFoundException
+	 * @throws Exception 
 	 */
-	public static void main(String[] args) throws FileNotFoundException,
-			IOException, TableNotFoundException {
+	public static void main(String[] args) throws Exception {
 		ColumnResolver initializeWithFile = ColumnResolver
 				.initializeWithFile("G:/git/qmapper/QMapper/tables/tableDesc.properties");
 		RuleChain chain = new RuleChain(initializeWithFile);
