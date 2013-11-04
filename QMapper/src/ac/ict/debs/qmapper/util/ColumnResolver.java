@@ -19,6 +19,18 @@ public class ColumnResolver {
 		public String defaultValue;
 		public String columnName;
 		public String type;
+
+		public String toString() {
+			if (defaultValue != null) {
+				if (type.toLowerCase().equals("string")) {
+					return "'" + defaultValue + "' AS " + columnName;
+				} else {
+					return defaultValue + " AS " + columnName;
+				}
+			} else {
+				return "null AS " + columnName;
+			}
+		}
 	}
 
 	final static Logger LOG = Logger.getLogger(ColumnResolver.class);

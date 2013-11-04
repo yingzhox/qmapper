@@ -25,14 +25,14 @@ public class formatsql {
              System.out.println("Usage: java formatsql sqlfile.sql");
              return;
          }
-         File file=new File(args[0]);
-         if (!file.exists()){
-             System.out.println("File not exists:"+args[0]);
-             return;
-         }
+//         File file=new File(args[0]);
+//         if (!file.exists()){
+//             System.out.println("File not exists:"+args[0]);
+//             return;
+//         }
 
         TGSqlParser sqlparser = new TGSqlParser(EDbVendor.dbvoracle);
-         sqlparser.sqlfilename = args[0];
+         sqlparser.sqltext = args[0];
         //sqlparser.sqltext = "select col1, col2,sum(col3) from table1, table2 where col4 > col5 and col6= 1000";
 //         TGSqlParser sqlparser = new TGSqlParser(EDbVendor.dbvpostgresql);
 //         sqlparser.sqltext ="WITH upd AS (\n" +

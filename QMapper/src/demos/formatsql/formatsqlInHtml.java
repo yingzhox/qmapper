@@ -32,8 +32,8 @@ public class formatsqlInHtml
 	{
 
 		GFmtOpt option = GFmtOptFactory.newInstance( );
-		//option.outputFmt = GOutputFmt.ofhtml;
-		option.outputFmt = GOutputFmt.ofSql;
+		option.outputFmt = GOutputFmt.ofhtml;
+		//option.outputFmt = GOutputFmt.ofSql;
 		if ( custom )
 		{
 			OutputConfig outputConfig = OutputConfigFactory.getOutputConfig( option,
@@ -48,8 +48,8 @@ public class formatsqlInHtml
 		String result = FormatterFactory.pp( sqlparser, option );
 
 		ByteArrayInputStream bis = new ByteArrayInputStream( result.getBytes( ) );
-		String outputFile = sqlparser.sqlfilename + ".html";
-		System.out.println("out file:"+outputFile);
+		//String outputFile = sqlparser.sqlfilename + ".html";
+		//System.out.println("out file:"+outputFile);
 		System.out.println(result);
 //		writeToFile( new File( outputFile ), bis, true );
 //		try
@@ -99,15 +99,15 @@ public class formatsqlInHtml
 			System.out.println( "/c: option, use the custom format color and font setting." );
 			return;
 		}
-		File file = new File( args[0] );
-		if ( !file.exists( ) )
-		{
-			System.out.println( "File not exists:" + args[0] );
-			return;
-		}
+//		File file = new File( args[0] );
+//		if ( !file.exists( ) )
+//		{
+//			System.out.println( "File not exists:" + args[0] );
+//			return;
+//		}
 
 		TGSqlParser sqlparser = new TGSqlParser( EDbVendor.dbvmssql );
-		sqlparser.sqlfilename = args[0];
+		sqlparser.sqltext = args[0];
 
 		int ret = sqlparser.parse( );
 		if ( ret == 0 )
